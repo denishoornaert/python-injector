@@ -24,5 +24,5 @@ class Generator():
         except EOFError as e:
             pass #resume ; typically acts as a break
         # End of the process : write the generated LaTeX file
-        destFile = os.path.splitext(srcFile)[0]+extension
+        destFile = os.path.splitext(srcFile)[0]+"."+extension
         FileController.write(destFile, data)
