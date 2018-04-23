@@ -9,9 +9,9 @@ class Generator():
     """docstring for Generator."""
 
     @staticmethod
-    def generates(pyLaTeXFile):
+    def generates(srcFile, extension):
         # Setup variables
-        parser = Parser(pyLaTeXFile)
+        parser = Parser(srcFile)
         data = ""
         # Main part of the code
         try:
@@ -22,7 +22,7 @@ class Generator():
                 else:
                     data += res[1]
         except EOFError as e:
-            pass #resume ; typically act as a break
+            pass #resume ; typically acts as a break
         # End of the process : write the generated LaTeX file
-        destFile = os.path.splitext(pyLaTeXFile)[0]+".tex"
+        destFile = os.path.splitext(srcFile)[0]+extension
         FileController.write(destFile, data)
