@@ -5,7 +5,7 @@ import traceback
 import re
 
 # Set up the pylatex specific functions
-from src.session.Functions import *
+from pythonInjector.src.session.Functions import *
 
 class Interpreter():
 
