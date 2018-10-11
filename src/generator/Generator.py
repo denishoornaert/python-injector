@@ -1,8 +1,8 @@
 import os
-from pythonInjector.src.fileController import FileController
-from pythonInjector.src.lexer import Parser
-from pythonInjector.src.lexer.struct import Environment
-from pythonInjector.src.interpreter import Interpreter
+from src.fileController import FileController
+from src.lexer import Parser
+from src.lexer.struct import Environment
+from src.interpreter import Interpreter
 
 class Generator():
 

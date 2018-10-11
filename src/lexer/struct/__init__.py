@@ -1,1 +1,1 @@
-from pythonInjector.src.lexer.struct.Environment import *
+from src.lexer.struct.Environment import *

@@ -1,1 +1,1 @@
-from pythonInjector.src.fileController.FileController import *
+from src.fileController.FileController import *
