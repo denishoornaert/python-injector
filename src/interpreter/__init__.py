@@ -1,1 +1,1 @@
-from src.interpreter.Interpreter import *
+from pythonInjector.src.interpreter.Interpreter import *

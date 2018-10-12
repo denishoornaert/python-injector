@@ -1,1 +1,1 @@
-from src.generator.Generator import *
+from pythonInjector.src.generator.Generator import *

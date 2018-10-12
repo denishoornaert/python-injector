@@ -1,6 +1,6 @@
-from src.lexer.struct import Environment
-from src.lexer.error import UnclosedEnvironmentError, PatternNotFoundError
-from src.fileController import FileController
+from pythonInjector.src.lexer.struct import Environment
+from pythonInjector.src.lexer.error import UnclosedEnvironmentError, PatternNotFoundError
+from pythonInjector.src.fileController import FileController
 
 class Parser():
 

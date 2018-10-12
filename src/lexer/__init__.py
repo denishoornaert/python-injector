@@ -1,3 +1,3 @@
-from src.lexer.struct import *
-from src.lexer.error import *
-from src.lexer.Parser import *
+from pythonInjector.src.lexer.struct import *
+from pythonInjector.src.lexer.error import *
+from pythonInjector.src.lexer.Parser import *
