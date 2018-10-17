@@ -101,5 +101,15 @@ class TestParser(unittest.TestCase):
         res = self.parser.lex()
         self.assertEqual(res, (Environment.latex, "\n\end{document}"))
 
+    def test_EmptyMultilinePythonEnvironment(self):
+        filepath = config.getCompletePath("EmptyMultilinePythonEnvironment")
+        self.parser = Parser(filepath)
+        res = self.parser.lex()
+        self.assertEqual(res, (Environment.latex, "\documentclass[a4paper,11pt]{article}\n\\begin{document}\n\section{test}\n"))
+        res = self.parser.lex()
+        self.assertEqual(res, (Environment.python, ''))
+        res = self.parser.lex()
+        self.assertEqual(res, (Environment.latex, "\n\end{document}"))
+
 if __name__ == '__main__':
     unittest.main()
