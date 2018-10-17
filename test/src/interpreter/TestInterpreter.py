@@ -48,5 +48,10 @@ class TestInterpreter(unittest.TestCase):
         res = Interpreter.escapeCharactersManagement(instruction)
         self.assertEqual(res, 'out(str(0)+" & "+str(1)+" & "+str(2)+" \\\\\\\\ \\n")')
 
+    def test_MultilineTabTriming(self):
+        instruction = FileController.read(TestInterpreter.path+"MultilineTabTriming"+TestInterpreter.ext)
+        res = Interpreter.execute(instruction)
+        self.assertEqual(res, "1\n3\n")
+
 if __name__ == '__main__':
     unittest.main()
