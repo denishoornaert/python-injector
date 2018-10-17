@@ -1,5 +1,5 @@
 from pythonInjector.src.lexer.struct import Environment
-from pythonInjector.src.lexer.error import UnclosedEnvironmentError, PatternNotFoundError
+from pythonInjector.src.lexer.error import UnclosedEnvironmentError, PatternNotFoundError, InlineEnvironmentError, MultilineEnvironmentError
 from pythonInjector.src.fileController import FileController
 
 class Parser():
@@ -29,6 +29,46 @@ class Parser():
             raise PatternNotFoundError("The pattern '"+pattern+"' has not been found")
         return index
 
+    def inlineFormating(self, string):
+        if(string.count('\n')):
+            raise InlineEnvironmentError("The inline python environment contains a '\\n'. Try to create a multiline python environment.")
+        return string
+
+    def multilineFormating(self, string):
+        prefix = ""
+        counter = 0
+        while(counter < len(string)):
+            if(string[counter] == '\n'):
+                print("WARNING : ill-formed multiline environment ! There is an extra '\\n'.")
+                string = string[counter:] # remove the useless blank chars
+                prefix = "" # reset
+            elif(string[counter] in (' ', '\t')):
+                prefix += string[counter]
+            else: # first char found
+                if(string[len(string)-1] != '\n'):
+                    raise MultilineEnvironmentError("The multiline python environment is not correctly closed. Have you finished the environment by a '\\n' followed by a sequence of blank chars ?")
+                else:
+                    string = string[:len(string)-1] # remove last element
+                string = string.split('\n')
+                string = '\n'.join([line if(line == '') else line[len(prefix):] for line in string])
+            counter += 1
+        return string
+
+    def pythonEnvironmentFormating(self, string):
+        res = ""
+        counter = 0
+        while(counter < len(string)):
+            if(string[counter] == '\n'):
+                res = self.multilineFormating(string[counter:])
+                break
+            elif(string[counter] != '\t' and string[counter] != ' '):
+                print(string[counter:])
+                res = self.inlineFormating(string[counter:])
+                break
+            # else: keep looping
+            counter += 1
+        return res
+
     def manageNewEnvironment(self, index, delimiter):
         """
         (private) Returns a tuple of the environment and its associated content.
@@ -39,7 +79,9 @@ class Parser():
             if(self.isStateLatex()):
                 res = (Environment.latex, self.content[self.cursor:index])
             else:
-                res = (Environment.python, self.content[self.cursor:index].strip())
+                # res = (Environment.python, self.content[self.cursor:index].strip())
+                instructions = self.pythonEnvironmentFormating(self.content[self.cursor:index])
+                res = (Environment.python, instructions)
             self.cursor = index+len(delimiter)
             self.currentEnvironment = Environment.python if(self.isStateLatex()) else Environment.latex
         return res
