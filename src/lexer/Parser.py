@@ -37,42 +37,24 @@ class Parser():
     def multilineFormating(self, string):
         prefix = ""
         counter = 0
-        state = 0
         while(counter < len(string)):
             if(string[counter] == '\n'):
                 print("WARNING : ill-formed multiline environment ! There is an extra '\\n'.")
+                print(string[:counter]+"       "+string[counter+1:])
                 string = string[counter+1:] # remove the useless blank chars
                 prefix = "" # reset
                 counter = 0
-            elif(string[counter] in (' ', '\n')):
+            elif(string[counter] in (' ', '\t')):
                 prefix += string[counter]
                 counter += 1
             else:
                 break
-
         string = string.split('\n')
         if(all([s in (' ', '\t') for s in string[len(string)-1]])):
             string = string[:len(string)-1] # remove last element
         else:
             raise MultilineEnvironmentError("The multiline python environment is not correctly closed. Have you finished the environment by a '\\n' followed by a sequence of blank chars ?")
         string = '\n'.join([line if(line == '') else line[len(prefix):] for line in string])
-
-#        while(counter < len(string)):
-#            if(string[counter] == '\n'):
-#                print("WARNING : ill-formed multiline environment ! There is an extra '\\n'.")
-#                string = string[counter+1:] # remove the useless blank chars
-#                prefix = "" # reset
-#                counter = -1
-#            elif(string[counter] in (' ', '\t')):
-#                prefix += string[counter]
-#            else: # first char found
-#                string = string.split('\n')
-#                if(all([s in (' ', '\t') for s in string[len(string)-1]])):
-#                    string = string[:len(string)-1] # remove last element
-#                else:
-#                    raise MultilineEnvironmentError("The multiline python environment is not correctly closed. Have you finished the environment by a '\\n' followed by a sequence of blank chars ?")
-#                string = '\n'.join([line if(line == '') else line[len(prefix):] for line in string])
-#            counter += 1
         return string
 
     def pythonEnvironmentFormating(self, string):
