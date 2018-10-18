@@ -6,7 +6,7 @@ class Parser():
 
     """docstring for Parser."""
 
-    def __init__(self, filename):
+    def __init__(self, filename = ''):
         self.content = FileController.read(filename)
         self.currentEnvironment = Environment.plainText
         self.cursor = 0
@@ -38,7 +38,7 @@ class Parser():
         prefix = ""
         counter = 0
         while(counter < len(string)):
-            if(string[counter] in (' ', '\n')):
+            if(string[counter] in (' ', '\t')):
                 prefix += string[counter]
                 counter += 1
             else:
@@ -50,22 +50,22 @@ class Parser():
         cleanedStrings = [string for string in strings if(not(all([s in (' ', '\t') for s in string])))]
         prefix = self.getBlankCharsOnLeft(cleanedStrings[0]) if (len(cleanedStrings) > 0) else ""
         string = '\n'.join([line if(line == '') else line[len(prefix):] for line in cleanedStrings])
-        return string
+        return string, prefix
 
     def pythonEnvironmentFormating(self, string):
         res = ""
+        prefix = ""
         counter = 0
         while(counter < len(string)):
             if(string[counter] == '\n'):
-                res = self.multilineFormating(string[counter:])
+                res, prefix = self.multilineFormating(string[counter:])
                 break
             elif(string[counter] != '\t' and string[counter] != ' '):
-                print(string[counter:])
                 res = self.inlineFormating(string[counter:])
                 break
             # else: keep looping
             counter += 1
-        return res
+        return res, prefix
 
     def manageNewEnvironment(self, index, delimiter):
         """
@@ -78,8 +78,8 @@ class Parser():
                 res = PlainTextEnvironment(self.content[self.cursor:index])
                 self.currentEnvironment = Environment.python
             else:
-                instructions = self.pythonEnvironmentFormating(self.content[self.cursor:index])
-                res = PythonEnvironment(instructions, "")
+                instructions, prefix = self.pythonEnvironmentFormating(self.content[self.cursor:index])
+                res = PythonEnvironment(instructions, prefix)
                 self.currentEnvironment = Environment.plainText
             self.cursor = index+len(delimiter)
         return res

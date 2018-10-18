@@ -111,5 +111,31 @@ class TestParser(unittest.TestCase):
         res = self.parser.lex()
         self.assertEqual(res, PlainTextEnvironment("\n\end{document}"))
 
+    def test_MultilineFormating(self):
+        filepath = config.getCompletePath("MultilineTabTriming")
+        self.parser = Parser(filepath)
+        content = '\n\ta = 42\n\tb = 25\n\tout(a-b)\n'
+        clearedTab, prefix = self.parser.multilineFormating(content)
+        self.assertEqual(prefix, '\t')
+        self.assertEqual(clearedTab, 'a = 42\nb = 25\nout(a-b)')
+
+    def test_PythonEnvironmentFormating(self):
+        filepath = config.getCompletePath("MultilineTabTriming")
+        self.parser = Parser(filepath)
+        content = '\n\ta = 42\n\tb = 25\n\tout(a-b)\n'
+        clearedTab, prefix = self.parser.pythonEnvironmentFormating(content)
+        self.assertEqual(prefix, '\t')
+        self.assertEqual(clearedTab, 'a = 42\nb = 25\nout(a-b)')
+
+    def test_MultilineTabTriming(self):
+        filepath = config.getCompletePath("MultilineTabTriming")
+        self.parser = Parser(filepath)
+        res = self.parser.lex()
+        self.assertEqual(res, PlainTextEnvironment("\documentclass[a4paper,11pt]{article}\n\\begin{document}\n\section{test}\n"))
+        res = self.parser.lex()
+        self.assertEqual(res, PythonEnvironment('a = 42\nb = 25\nout(a-b)', '    '))
+        res = self.parser.lex()
+        self.assertEqual(res, PlainTextEnvironment("\n\end{document}"))
+
 if __name__ == '__main__':
     unittest.main()
