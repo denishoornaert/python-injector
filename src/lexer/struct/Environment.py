@@ -18,7 +18,8 @@ class PythonEnvironment():
         return (self.content == other.content) and (self.prefix == other.prefix)
 
     def execute(self):
-        return Interpreter.execute(self.content)
+        raw = Interpreter.execute(self.content).split('\n')
+        return ''.join([self.prefix+line+'\n' for line in raw[len(raw)-1]])
 
 
 class PlainTextEnvironment():
