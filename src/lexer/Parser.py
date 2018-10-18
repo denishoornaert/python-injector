@@ -39,7 +39,7 @@ class Parser():
         counter = 0
         while(counter < len(string)):
             if(string[counter] in (' ', '\n')):
-                prefix += s
+                prefix += string[counter]
                 counter += 1
             else:
                 counter = len(string)
