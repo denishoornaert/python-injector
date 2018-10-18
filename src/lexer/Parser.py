@@ -1,4 +1,4 @@
-from pythonInjector.src.lexer.struct import Environment
+from pythonInjector.src.lexer.struct import Environment, PlainTextEnvironment, PythonEnvironment
 from pythonInjector.src.lexer.error import UnclosedEnvironmentError, PatternNotFoundError, InlineEnvironmentError, MultilineEnvironmentError
 from pythonInjector.src.fileController import FileController
 
@@ -8,14 +8,14 @@ class Parser():
 
     def __init__(self, filename):
         self.content = FileController.read(filename)
-        self.currentEnvironment = Environment.latex
+        self.currentEnvironment = Environment.plainText
         self.cursor = 0
 
-    def isStateLatex(self):
+    def isStatePlainText(self):
         """
-        (public) Returns whether the previous environment was LaTex or Python.
+        (public) Returns whether the previous environment was PlainText or Python.
         """
-        return self.currentEnvironment == Environment.latex
+        return self.currentEnvironment == Environment.plainText
 
     def indexOf(self, pattern, start=0):
         """
@@ -74,14 +74,14 @@ class Parser():
         """
         res = None
         if(index >= 0):
-            if(self.isStateLatex()):
-                res = (Environment.latex, self.content[self.cursor:index])
+            if(self.isStatePlainText()):
+                res = PlainTextEnvironment(self.content[self.cursor:index])
+                self.currentEnvironment = Environment.python
             else:
-                # res = (Environment.python, self.content[self.cursor:index].strip())
                 instructions = self.pythonEnvironmentFormating(self.content[self.cursor:index])
-                res = (Environment.python, instructions)
+                res = PythonEnvironment(instructions, "")
+                self.currentEnvironment = Environment.plainText
             self.cursor = index+len(delimiter)
-            self.currentEnvironment = Environment.python if(self.isStateLatex()) else Environment.latex
         return res
 
     def manageEndEnvironment(self, delimiter):
@@ -91,9 +91,9 @@ class Parser():
         been closed (i.e. if no '?>' appears in the remaing input).
         """
         res = None
-        if(delimiter == "<?"): # and index == -1 : the remaining of the file only contains latex environment
-            res = (Environment.latex, self.content[self.cursor:])
-            self.currentEnvironment = Environment.latex
+        if(delimiter == "<?"): # and index == -1 : the remaining of the file only contains plainText environment
+            res = PlainTextEnvironment(self.content[self.cursor:])
+            self.currentEnvironment = Environment.plainText
             self.cursor = len(self.content)-1
         else: # delimiter == "?>" and index == -1 : the python environment is not closed
             raise UnclosedEnvironmentError("The Python environment openned at (x, y) is not closed.")
@@ -106,7 +106,7 @@ class Parser():
         """
         res = None
         if(self.cursor < len(self.content)-1):
-            delimiter = "<?" if(self.isStateLatex()) else "?>"
+            delimiter = "<?" if(self.isStatePlainText()) else "?>"
             try:
                 index = self.indexOf(delimiter, self.cursor)
                 res = self.manageNewEnvironment(index, delimiter)
