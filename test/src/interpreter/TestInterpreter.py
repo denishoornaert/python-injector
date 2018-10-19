@@ -46,7 +46,7 @@ class TestInterpreter(unittest.TestCase):
     def test_EscapeCharactersDoubleBackSlash(self):
         instruction = FileController.read(TestInterpreter.path+"EnvironmentWithDoubleBackSlash"+TestInterpreter.ext)
         res = Interpreter.escapeCharactersManagement(instruction)
-        self.assertEqual(res, 'out(str(0)+" & "+str(1)+" & "+str(2)+" \\\\\\\\ \\n")')
+        self.assertEqual(res, 'out(str(0)+" & "+str(1)+" & "+str(2)+" \\\\\\\\ \\n")\n')
 
 if __name__ == '__main__':
     unittest.main()

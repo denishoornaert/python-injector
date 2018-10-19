@@ -4,7 +4,7 @@ from src.lexer.Parser import Parser
 from src.lexer.struct import Environment, PythonEnvironment, PlainTextEnvironment
 from src.lexer.error import UnclosedEnvironmentError
 
-from test import TestConfiguration as config
+from test import Configuration as config
 
 class TestParser(unittest.TestCase):
 
@@ -54,7 +54,7 @@ class TestParser(unittest.TestCase):
         res = self.parser.lex()
         self.assertEqual(res, PythonEnvironment('print("Blablablablabla...")', ''))
         res = self.parser.lex()
-        self.assertEqual(res, PlainTextEnvironment("\n\end{document}"))
+        self.assertEqual(res, PlainTextEnvironment("\n\end{document}\n"))
 
     def test_UnclosedPythonEnvironment(self):
         filepath = config.getCompletePath("UnclosedPythonEnvironment")
@@ -75,7 +75,7 @@ class TestParser(unittest.TestCase):
         res = self.parser.lex()
         self.assertEqual(res, PythonEnvironment('print("Almost the end...")', ''))
         res = self.parser.lex()
-        self.assertEqual(res, PlainTextEnvironment("\n\end{document}"))
+        self.assertEqual(res, PlainTextEnvironment("\n\end{document}\n"))
 
     def test_TwoConsecutivePythonEnvironments(self):
         filepath = config.getCompletePath("TwoConsecutivePythonEnvironments")
@@ -89,7 +89,7 @@ class TestParser(unittest.TestCase):
         res = self.parser.lex()
         self.assertEqual(res, PythonEnvironment('print("Bla")', ''))
         res = self.parser.lex()
-        self.assertEqual(res, PlainTextEnvironment("\n\end{document}"))
+        self.assertEqual(res, PlainTextEnvironment("\n\end{document}\n"))
 
     def test_MultilinePythonEnvironment(self):
         filepath = config.getCompletePath("MultilinePythonEnvironment")
@@ -99,7 +99,7 @@ class TestParser(unittest.TestCase):
         res = self.parser.lex()
         self.assertEqual(res, PythonEnvironment('a = 42\nb = 25\nout(a-b)', ''))
         res = self.parser.lex()
-        self.assertEqual(res, PlainTextEnvironment("\n\end{document}"))
+        self.assertEqual(res, PlainTextEnvironment("\n\end{document}\n"))
 
     def test_EmptyMultilinePythonEnvironment(self):
         filepath = config.getCompletePath("EmptyMultilinePythonEnvironment")
@@ -109,7 +109,7 @@ class TestParser(unittest.TestCase):
         res = self.parser.lex()
         self.assertEqual(res, PythonEnvironment('', ''))
         res = self.parser.lex()
-        self.assertEqual(res, PlainTextEnvironment("\n\end{document}"))
+        self.assertEqual(res, PlainTextEnvironment("\n\end{document}\n"))
 
     def test_MultilineFormating(self):
         filepath = config.getCompletePath("MultilineTabTriming")
@@ -135,7 +135,7 @@ class TestParser(unittest.TestCase):
         res = self.parser.lex()
         self.assertEqual(res, PythonEnvironment('a = 42\nb = 25\nout(a-b)', '    '))
         res = self.parser.lex()
-        self.assertEqual(res, PlainTextEnvironment("\n\end{document}"))
+        self.assertEqual(res, PlainTextEnvironment("\n\end{document}\n"))
 
 if __name__ == '__main__':
     unittest.main()
