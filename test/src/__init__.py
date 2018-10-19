@@ -1,1 +1,1 @@
-from test.src.TestConfiguration import *
+from test.src.Configuration import *
