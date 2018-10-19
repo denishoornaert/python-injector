@@ -19,7 +19,7 @@ class PythonEnvironment():
 
     def execute(self):
         raw = Interpreter.execute(self.content).split('\n')
-        return ''.join([self.prefix+line+'\n' for line in raw[len(raw)-1]])
+        return ''.join([self.prefix+line+'\n' for line in raw])
 
 
 class PlainTextEnvironment():
