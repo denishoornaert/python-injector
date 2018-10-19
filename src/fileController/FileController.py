@@ -9,7 +9,7 @@ class FileController():
         parameter.
         """
         f = open(filename)
-        res = f.read().strip()
+        res = f.read()
         f.close()
         return res
 
